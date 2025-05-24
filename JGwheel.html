@@ -53,22 +53,12 @@
   <button onclick="spin()">旋转轮盘</button>
   <button onclick="showLegend()">查看任务列表</button>
   <button onclick="showHistory()">查看历史记录</button>
-  <audio id="spinStartSound" src="sounds/spinStartSound.mp3" preload="auto"></audio>
-  <audio id="tickSound" src="sounds/tickSound.mp3" preload="auto" loop></audio>
-  <audio id="winSound" src="sounds/winSound.mp3" preload="auto"></audio>
-  <audio id="clickSound" src="sounds/clickSound.mp3" preload="auto"></audio>
-
-
 
   <script>
-
-    function playSpinStart() {
-      document.getElementById("spinStartSound").play();
-      document.getElementById("tickSound").play();
-    }
-
     function playClick() {
-      document.getElementById("clickSound").play();
+      if (navigator.vibrate) {
+        navigator.vibrate(50); // 震动 50 毫秒
+      }
     }
 
     const tasks = [
@@ -146,9 +136,7 @@
       if (history.length > 10) history.pop();
 
       setTimeout(() => {
-        document.getElementById("tickSound").pause();         // 停止咔哒
-        document.getElementById("tickSound").currentTime = 0; // 重置
-        document.getElementById("winSound").play();           // 播放中奖提示音
+        if (navigator.vibrate) navigator.vibrate(200);
         alert(`你抽中的是：${resultIndex + 1}号 - ${resultText}`);
       }, 5000);}
 
