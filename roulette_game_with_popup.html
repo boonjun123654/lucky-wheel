@@ -12,11 +12,9 @@
       font-family: "Segoe UI", sans-serif;
       margin: 0;
       padding: 0;
-      height: 100%;
     }
     h1 {
-      margin-top: 15px;
-      margin-bottom: 10px;
+      margin: 15px 0 10px;
       font-size: 6vw;
     }
     #pointer {
@@ -44,7 +42,16 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      margin: 20px auto 40px;
+      margin: 20px auto;
+    }
+    #legend {
+      margin-top: 10px;
+      font-size: 4vw;
+      line-height: 1.6;
+      max-width: 90vw;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
     }
   </style>
 </head>
@@ -53,12 +60,26 @@
   <div id="pointer"></div>
   <canvas id="canvas" width="400" height="400"></canvas>
   <button onclick="spin()">旋转轮盘</button>
+  <div id="legend"></div>
+  <button onclick="showHistory()">查看历史记录</button>
 
   <script>
-    const tasks = ['大家一起喝一杯!', '自己喝一杯!', '选一个人陪你喝!', '全场女子喝一杯!', '随意指定一人喝!', '全场男子喝一杯!', '所有人敬你一杯', '自己安全，不用喝', '猜拳输的人喝', '选两人一起喝'];
+    const tasks = [
+      '大家一起干杯！',
+      '自己喝两口！',
+      '选一个人陪你喝！',
+      '点到谁谁喝！',
+      '指定一人喝三口！',
+      '玩剪刀石头布，输的喝！',
+      '全员喝一杯！',
+      '自己安全，不用喝！',
+      '全体敬你一口！',
+      '选两人一起喝！'
+    ];
     const numSegments = tasks.length;
     const anglePerSegment = 360 / numSegments;
     let deg = 0;
+    let history = [];
 
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
@@ -74,14 +95,14 @@
         ctx.arc(200, 200, radius, angle, angle + anglePerSegment * Math.PI / 180);
         ctx.fill();
 
-        // Draw text
+        // Draw number
         ctx.save();
         ctx.translate(200, 200);
         ctx.rotate(angle + anglePerSegment * Math.PI / 360 - Math.PI / 2);
         ctx.fillStyle = "gold";
-        ctx.font = "12px sans-serif";
+        ctx.font = "bold 16px sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText(tasks[i], 0, -140);
+        ctx.fillText((i + 1).toString(), 0, -140);
         ctx.restore();
       }
 
@@ -94,21 +115,33 @@
     }
 
     function spin() {
-      const wheel = canvas;
       const randomDeg = 3600 + Math.floor(Math.random() * 360);
       deg += randomDeg;
-      wheel.style.transform = "rotate(" + deg + "deg)";
-      wheel.style.transition = "transform 5s cubic-bezier(0.33, 1, 0.68, 1)";
+      canvas.style.transform = "rotate(" + deg + "deg)";
+      canvas.style.transition = "transform 5s cubic-bezier(0.33, 1, 0.68, 1)";
 
       const resultIndex = numSegments - Math.floor((deg % 360) / anglePerSegment) - 1;
-      const result = tasks[(resultIndex + numSegments) % numSegments];
+      const resultNum = (resultIndex + numSegments) % numSegments;
+      const resultText = tasks[resultNum];
+      history.unshift(`${resultNum + 1}号：${resultText}`);
+      if (history.length > 10) history.pop();
 
       setTimeout(() => {
-        alert("你抽中的是：" + result);
+        alert("你抽中的是：" + (resultNum + 1) + "号 - " + resultText);
       }, 5000);
     }
 
+    function showLegend() {
+      const legend = document.getElementById("legend");
+      legend.innerHTML = tasks.map((t, i) => `<div>${i + 1}号 = ${t}</div>`).join("");
+    }
+
+    function showHistory() {
+      alert("历史记录：\n" + history.join("\n"));
+    }
+
     drawWheel();
+    showLegend();
   </script>
 </body>
 </html>
