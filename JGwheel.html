@@ -50,9 +50,10 @@
   <h1>酒鬼轮盘</h1>
   <div id="pointer"></div>
   <canvas id="canvas"></canvas>
-  <button onclick="spin()">旋转轮盘</button>
-  <button onclick="showLegend()">查看任务列表</button>
-  <button onclick="showHistory()">查看历史记录</button>
+  <button onclick="playClick(); spin()">旋转轮盘</button>
+  <button onclick="playClick(); showLegend()">查看任务列表</button>
+  <button onclick="playClick(); showHistory()">查看历史记录</button>
+
 
   <script>
     function playClick() {
