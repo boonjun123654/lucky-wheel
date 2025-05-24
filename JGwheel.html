@@ -8,7 +8,7 @@
     html, body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(#000000, #1a1a1a);
+      background: linear-gradient(#000000,#000000);
       color: gold;
       font-family: "Segoe UI", sans-serif;
       text-align: center;
@@ -38,6 +38,7 @@
       padding: 12px;
       font-size: 5vw;
       background-color: gold;
+      color: black;
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -93,13 +94,13 @@
 
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        ctx.fillStyle = i % 2 === 0 ? "#333" : "#555";
+        ctx.fillStyle = i % 2 === 0 ? "#81021f" : "#202f39";
         ctx.arc(0, 0, radius, angle, angle + anglePerSegment * Math.PI / 180);
         ctx.fill();
 
         const textX = Math.cos(midAngle) * radius * 0.6;
         const textY = Math.sin(midAngle) * radius * 0.6;
-        ctx.fillStyle = "gold";
+        ctx.fillStyle = "cab49f";
         ctx.font = `${Math.floor(size * 0.045)}px sans-serif`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -109,7 +110,7 @@
       ctx.beginPath();
       ctx.arc(0, 0, radius - 2, 0, 2 * Math.PI);
       ctx.lineWidth = size * 0.012;
-      ctx.strokeStyle = "gold";
+      ctx.strokeStyle = "#000000";
       ctx.stroke();
 
       ctx.restore();
