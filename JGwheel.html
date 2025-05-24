@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>酒鬼轮盘（倒三角箭头）</title>
+  <title>酒鬼轮盘 </title>
   <style>
     html, body {
       margin: 0;
@@ -53,8 +53,23 @@
   <button onclick="spin()">旋转轮盘</button>
   <button onclick="showLegend()">查看任务列表</button>
   <button onclick="showHistory()">查看历史记录</button>
+  <audio id="spinStartSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4d07c8e38a.mp3" preload="auto"></audio>
+  <audio id="tickSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5762b00e25.mp3" preload="auto" loop></audio>
+  <audio id="winSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c04b4c8f2e.mp3" preload="auto"></audio>
+  <audio id="clickSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_b4b0e5dc9a.mp3" preload="auto"></audio>
+
 
   <script>
+
+    function playSpinStart() {
+      document.getElementById("spinStartSound").play();
+      document.getElementById("tickSound").play();
+    }
+
+    function playClick() {
+      document.getElementById("clickSound").play();
+    }
+
     const tasks = [
       '大家一起干杯！',
       '自己喝两口！',
@@ -130,9 +145,11 @@
       if (history.length > 10) history.pop();
 
       setTimeout(() => {
+        document.getElementById("tickSound").pause();         // 停止咔哒
+        document.getElementById("tickSound").currentTime = 0; // 重置
+        document.getElementById("winSound").play();           // 播放中奖提示音
         alert(`你抽中的是：${resultIndex + 1}号 - ${resultText}`);
       }, 5000);
-    }
 
     function showLegend() {
       const text = tasks.map((t, i) => `${i + 1}号 = ${t}`).join("\n");
