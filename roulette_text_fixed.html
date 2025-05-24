@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>酒鬼轮盘</title>
+  <style>
+    body {
+      background: linear-gradient(#000000, #1a1a1a);
+      color: gold;
+      text-align: center;
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin-top: 30px;
+      font-size: 6vw;
+    }
+    #wheel {
+      width: 80vw;
+      height: 80vw;
+      max-width: 400px;
+      max-height: 400px;
+      border-radius: 50%;
+      border: 5px solid gold;
+      margin: 5vh auto;
+      position: relative;
+      transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+    #pointer {
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 30px solid red;
+      margin: 0 auto;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 5vw;
+      background-color: gold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      max-width: 90vw;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>酒鬼轮盘</h1>
+  <div id="pointer"></div>
+  <div id="wheel">
+    <canvas id="canvas" width="400" height="400"></canvas>
+  </div>
+  <button onclick="spin()">旋转轮盘</button>
+
+  <script>
+    const tasks = ['全员一起喝一杯', '自己喝两杯', '选一个人陪你喝', '玩剪刀石头布，输的喝', '指定一人喝三杯', '点到谁就喝', '所有人敬你一杯', '自己安全，不用喝', '猜拳输的人喝', '选两人一起喝'];
+    const numSegments = tasks.length;
+    const anglePerSegment = 360 / numSegments;
+    let deg = 0;
+
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    function drawWheel() {
+      for (let i = 0; i < numSegments; i++) {
+        const angle = i * anglePerSegment * Math.PI / 180;
+        ctx.beginPath();
+        ctx.moveTo(200, 200);
+        ctx.fillStyle = i % 2 === 0 ? "#333" : "#555";
+        ctx.arc(200, 200, 200, angle, angle + anglePerSegment * Math.PI / 180);
+        ctx.fill();
+
+        // Draw text facing outward
+        ctx.save();
+        ctx.translate(200, 200);
+        ctx.rotate(angle + anglePerSegment * Math.PI / 360 - Math.PI / 2);
+        ctx.fillStyle = "gold";
+        ctx.font = "12px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(tasks[i], 0, -160);
+        ctx.restore();
+      }
+    }
+
+    function spin() {
+      const wheel = document.getElementById("wheel");
+      const randomDeg = 3600 + Math.floor(Math.random() * 360);
+      deg += randomDeg;
+      wheel.style.transform = "rotate(" + deg + "deg)";
+
+      const resultIndex = numSegments - Math.floor((deg % 360) / anglePerSegment) - 1;
+      const result = tasks[(resultIndex + numSegments) % numSegments];
+
+      setTimeout(() => {
+        alert("你抽中的是：" + result);
+      }, 5000);
+    }
+
+    drawWheel();
+  </script>
+</body>
+</html>
