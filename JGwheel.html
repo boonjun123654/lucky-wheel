@@ -44,16 +44,6 @@
       cursor: pointer;
       margin: 20px auto 10px;
     }
-    #legend, #history {
-      margin-top: 10px;
-      font-size: 4vw;
-      line-height: 1.6;
-      max-width: 90vw;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: left;
-      display: none;
-    }
   </style>
 </head>
 <body>
@@ -61,10 +51,8 @@
   <div id="pointer"></div>
   <canvas id="canvas" width="400" height="400"></canvas>
   <button onclick="spin()">旋转轮盘</button>
-  <button onclick="toggleLegend()">查看任务列表</button>
+  <button onclick="showLegend()">查看任务列表</button>
   <button onclick="showHistory()">查看历史记录</button>
-  <div id="legend"></div>
-  <div id="history"></div>
 
   <script>
     const tasks = [
@@ -83,7 +71,6 @@
     const anglePerSegment = 360 / numSegments;
     let deg = 0;
     let history = [];
-    let legendVisible = false;
 
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
@@ -99,18 +86,16 @@
         ctx.arc(200, 200, radius, angle, angle + anglePerSegment * Math.PI / 180);
         ctx.fill();
 
-        // Draw number
         ctx.save();
         ctx.translate(200, 200);
         ctx.rotate(angle + anglePerSegment * Math.PI / 360 - Math.PI / 2);
         ctx.fillStyle = "gold";
-        ctx.font = "bold 16px sans-serif";
+        ctx.font = "bold 14px sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText((i + 1).toString(), 0, -130);
+        ctx.fillText((i + 1).toString(), 0, -115);  // closer inward
         ctx.restore();
       }
 
-      // Draw golden border
       ctx.beginPath();
       ctx.arc(200, 200, radius - 1, 0, 2 * Math.PI);
       ctx.lineWidth = 5;
@@ -135,22 +120,17 @@
       }, 5000);
     }
 
-    function toggleLegend() {
-      const legend = document.getElementById("legend");
-      if (legendVisible) {
-        legend.style.display = "none";
-        legendVisible = false;
-      } else {
-        legend.innerHTML = tasks.map((t, i) => `<div>${i + 1}号 = ${t}</div>`).join("");
-        legend.style.display = "block";
-        legendVisible = true;
-      }
+    function showLegend() {
+      const text = tasks.map((t, i) => `${i + 1}号 = ${t}`).join("\n");
+      alert("任务列表：\n" + text);
     }
 
     function showHistory() {
-      const output = history.length === 0 ? "（暂无记录）" : history.join("<br>");
-      document.getElementById("history").innerHTML = "<strong>历史记录：</strong><br>" + output;
-      document.getElementById("history").style.display = "block";
+      if (history.length === 0) {
+        alert("历史记录：\n（暂无记录）");
+      } else {
+        alert("历史记录：\n" + history.join("\n"));
+      }
     }
 
     drawWheel();
