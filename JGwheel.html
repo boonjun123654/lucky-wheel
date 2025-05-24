@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>酒鬼轮盘（箭头对齐）</title>
+  <title>酒鬼轮盘（数字居中格子）</title>
   <style>
     html, body {
       margin: 0;
@@ -90,19 +90,22 @@
 
       for (let i = 0; i < numSegments; i++) {
         const angle = i * anglePerSegment * Math.PI / 180;
+        const midAngle = angle + anglePerSegment * Math.PI / 360;
+
         ctx.beginPath();
         ctx.moveTo(0, 0);
         ctx.fillStyle = i % 2 === 0 ? "#333" : "#555";
         ctx.arc(0, 0, radius, angle, angle + anglePerSegment * Math.PI / 180);
         ctx.fill();
 
-        ctx.save();
-        ctx.rotate(angle + anglePerSegment * Math.PI / 360);
+        // Draw number centered in the segment
+        const textX = Math.cos(midAngle) * radius * 0.6;
+        const textY = Math.sin(midAngle) * radius * 0.6;
         ctx.fillStyle = "gold";
-        ctx.font = `${Math.floor(size * 0.04)}px sans-serif`;
+        ctx.font = `${Math.floor(size * 0.045)}px sans-serif`;
         ctx.textAlign = "center";
-        ctx.fillText((i + 1).toString(), 0, -radius * 0.65);
-        ctx.restore();
+        ctx.textBaseline = "middle";
+        ctx.fillText((i + 1).toString(), textX, textY);
       }
 
       ctx.beginPath();
@@ -119,8 +122,7 @@
       const segmentAngle = 360 / numSegments;
       const offsetFromCenter = segmentAngle / 2;
       const targetAngle = 360 - (resultIndex * segmentAngle + offsetFromCenter);
-
-      const extraRotations = 10 * 360; // 10 full spins
+      const extraRotations = 10 * 360;
       deg = deg + extraRotations + targetAngle;
 
       canvas.style.transform = `rotate(${deg}deg)`;
