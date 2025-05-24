@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>酒鬼轮盘</title>
+  <title>酒鬼轮盘（自适应）</title>
   <style>
     html, body {
-      background: linear-gradient(#000000, #1a1a1a);
-      color: gold;
-      text-align: center;
-      font-family: "Segoe UI", sans-serif;
       margin: 0;
       padding: 0;
+      background: linear-gradient(#000000, #1a1a1a);
+      color: gold;
+      font-family: "Segoe UI", sans-serif;
+      text-align: center;
     }
     h1 {
-      margin: 15px 0 10px;
       font-size: 6vw;
+      margin: 20px 0;
     }
     #pointer {
       width: 0;
@@ -28,8 +28,6 @@
     #canvas {
       width: 90vw;
       height: 90vw;
-      max-width: 400px;
-      max-height: 400px;
       display: block;
       margin: 0 auto;
     }
@@ -49,7 +47,7 @@
 <body>
   <h1>酒鬼轮盘</h1>
   <div id="pointer"></div>
-  <canvas id="canvas" width="400" height="400"></canvas>
+  <canvas id="canvas"></canvas>
   <button onclick="spin()">旋转轮盘</button>
   <button onclick="showLegend()">查看任务列表</button>
   <button onclick="showHistory()">查看历史记录</button>
@@ -75,32 +73,43 @@
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
-    function drawWheel() {
-      ctx.clearRect(0, 0, 400, 400);
-      const radius = 200;
+    function resizeCanvasAndDraw() {
+      const size = canvas.clientWidth;
+      canvas.width = size;
+      canvas.height = size;
+      drawWheel(size);
+    }
+
+    function drawWheel(size) {
+      ctx.clearRect(0, 0, size, size);
+      const radius = size / 2;
+      ctx.save();
+      ctx.translate(radius, radius);
+
       for (let i = 0; i < numSegments; i++) {
         const angle = i * anglePerSegment * Math.PI / 180;
         ctx.beginPath();
-        ctx.moveTo(200, 200);
+        ctx.moveTo(0, 0);
         ctx.fillStyle = i % 2 === 0 ? "#333" : "#555";
-        ctx.arc(200, 200, radius, angle, angle + anglePerSegment * Math.PI / 180);
+        ctx.arc(0, 0, radius, angle, angle + anglePerSegment * Math.PI / 180);
         ctx.fill();
 
         ctx.save();
-        ctx.translate(200, 200);
-        ctx.rotate(angle + anglePerSegment * Math.PI / 360 - Math.PI / 2);
+        ctx.rotate(angle + anglePerSegment * Math.PI / 360);
         ctx.fillStyle = "gold";
-        ctx.font = "bold 12px sans-serif"; // smaller font
+        ctx.font = `${Math.floor(size * 0.04)}px sans-serif`;
         ctx.textAlign = "center";
-        ctx.fillText((i + 1).toString(), 0, -100);  // moved further inward
+        ctx.fillText((i + 1).toString(), 0, -radius * 0.65);
         ctx.restore();
       }
 
       ctx.beginPath();
-      ctx.arc(200, 200, radius - 1, 0, 2 * Math.PI);
-      ctx.lineWidth = 5;
+      ctx.arc(0, 0, radius - 2, 0, 2 * Math.PI);
+      ctx.lineWidth = size * 0.012;
       ctx.strokeStyle = "gold";
       ctx.stroke();
+
+      ctx.restore();
     }
 
     function spin() {
@@ -133,7 +142,8 @@
       }
     }
 
-    drawWheel();
+    window.addEventListener("resize", resizeCanvasAndDraw);
+    resizeCanvasAndDraw();
   </script>
 </body>
 </html>
