@@ -2,44 +2,50 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>酒鬼轮盘</title>
   <style>
-    body {
+    html, body {
       background: linear-gradient(#000000, #1a1a1a);
       color: gold;
       text-align: center;
       font-family: "Segoe UI", sans-serif;
       margin: 0;
       padding: 0;
+      height: 100%;
     }
     h1 {
-      margin-top: 30px;
+      margin-top: 15px;
+      margin-bottom: 10px;
+      font-size: 6vw;
     }
     #wheel {
-      width: 400px;
-      height: 400px;
+      width: 90vw;
+      height: 90vw;
       border-radius: 50%;
-      border: 10px solid gold;
-      margin: 20px auto;
+      border: 5px solid gold;
+      margin: 0 auto;
       position: relative;
       transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
     }
     #pointer {
       width: 0;
       height: 0;
-      border-left: 30px solid transparent;
-      border-right: 30px solid transparent;
-      border-bottom: 40px solid red;
-      margin: 0 auto;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 30px solid red;
+      margin: 10px auto;
     }
     button {
-      padding: 10px 30px;
-      font-size: 20px;
+      width: 80vw;
+      max-width: 300px;
+      padding: 12px;
+      font-size: 5vw;
       background-color: gold;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      margin-top: 20px;
+      margin: 20px auto 40px;
     }
     canvas {
       position: absolute;
@@ -76,11 +82,11 @@
 
         ctx.save();
         ctx.translate(200, 200);
-        ctx.rotate(angle + anglePerSegment * Math.PI / 360);
+        ctx.rotate(angle + anglePerSegment * Math.PI / 360 - Math.PI / 2);
         ctx.fillStyle = "gold";
-        ctx.font = "14px sans-serif";
-        ctx.textAlign = "right";
-        ctx.fillText(tasks[i], 180, 5);
+        ctx.font = "12px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(tasks[i], 0, -160);
         ctx.restore();
       }
     }
