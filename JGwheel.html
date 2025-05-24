@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>酒鬼轮盘（箭头指向格）</title>
+  <title>酒鬼轮盘（箭头对齐）</title>
   <style>
     html, body {
       margin: 0;
@@ -115,21 +115,22 @@
     }
 
     function spin() {
-      const extraSpin = 3600 + Math.floor(Math.random() * 360); // at least 10 turns
-      const randomOffset = Math.floor(Math.random() * anglePerSegment);
-      const totalDeg = extraSpin + randomOffset;
-      deg += totalDeg;
+      const resultIndex = Math.floor(Math.random() * numSegments);
+      const segmentAngle = 360 / numSegments;
+      const offsetFromCenter = segmentAngle / 2;
+      const targetAngle = 360 - (resultIndex * segmentAngle + offsetFromCenter);
+
+      const extraRotations = 10 * 360; // 10 full spins
+      deg = deg + extraRotations + targetAngle;
 
       canvas.style.transform = `rotate(${deg}deg)`;
 
-      const resultIndex = numSegments - Math.floor((deg % 360) / anglePerSegment) - 1;
-      const resultNum = (resultIndex + numSegments) % numSegments;
-      const resultText = tasks[resultNum];
-      history.unshift(`${resultNum + 1}号：${resultText}`);
+      const resultText = tasks[resultIndex];
+      history.unshift(`${resultIndex + 1}号：${resultText}`);
       if (history.length > 10) history.pop();
 
       setTimeout(() => {
-        alert("你抽中的是：" + (resultNum + 1) + "号 - " + resultText);
+        alert("你抽中的是：" + (resultIndex + 1) + "号 - " + resultText);
       }, 5000);
     }
 
