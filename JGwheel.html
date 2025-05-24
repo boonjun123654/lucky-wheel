@@ -90,9 +90,9 @@
         ctx.translate(200, 200);
         ctx.rotate(angle + anglePerSegment * Math.PI / 360 - Math.PI / 2);
         ctx.fillStyle = "gold";
-        ctx.font = "bold 14px sans-serif";
+        ctx.font = "bold 12px sans-serif"; // smaller font
         ctx.textAlign = "center";
-        ctx.fillText((i + 1).toString(), 0, -115);  // closer inward
+        ctx.fillText((i + 1).toString(), 0, -100);  // moved further inward
         ctx.restore();
       }
 
