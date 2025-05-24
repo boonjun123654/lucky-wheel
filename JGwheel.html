@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>酒鬼轮盘（数字居中格子）</title>
+  <title>酒鬼轮盘（倒三角箭头）</title>
   <style>
     html, body {
       margin: 0;
@@ -15,16 +15,15 @@
     }
     h1 {
       font-size: 6vw;
-      margin: 20px 0;
+      margin: 20px 0 10px;
     }
     #pointer {
       width: 0;
       height: 0;
       border-left: 20px solid transparent;
       border-right: 20px solid transparent;
-      border-bottom: 30px solid red;
-      margin: 10px auto;
-      z-index: 10;
+      border-top: 30px solid red; /* 倒三角 */
+      margin: 0 auto 10px;
     }
     #canvas {
       width: 90vw;
@@ -69,7 +68,7 @@
     ];
     const numSegments = tasks.length;
     const anglePerSegment = 360 / numSegments;
-    let deg = 0;
+    let totalRotation = 0;
     let history = [];
 
     const canvas = document.getElementById("canvas");
@@ -89,7 +88,7 @@
       ctx.translate(radius, radius);
 
       for (let i = 0; i < numSegments; i++) {
-        const angle = i * anglePerSegment * Math.PI / 180;
+        const angle = (i * anglePerSegment - 90) * Math.PI / 180;
         const midAngle = angle + anglePerSegment * Math.PI / 360;
 
         ctx.beginPath();
@@ -98,7 +97,6 @@
         ctx.arc(0, 0, radius, angle, angle + anglePerSegment * Math.PI / 180);
         ctx.fill();
 
-        // Draw number centered in the segment
         const textX = Math.cos(midAngle) * radius * 0.6;
         const textY = Math.sin(midAngle) * radius * 0.6;
         ctx.fillStyle = "gold";
@@ -118,21 +116,20 @@
     }
 
     function spin() {
-      const resultIndex = Math.floor(Math.random() * numSegments);
-      const segmentAngle = 360 / numSegments;
-      const offsetFromCenter = segmentAngle / 2;
-      const targetAngle = 360 - (resultIndex * segmentAngle + offsetFromCenter);
-      const extraRotations = 10 * 360;
-      deg = deg + extraRotations + targetAngle;
+      const extraDegrees = 3600 + Math.floor(Math.random() * 360);
+      totalRotation += extraDegrees;
+      canvas.style.transform = `rotate(${totalRotation}deg)`;
 
-      canvas.style.transform = `rotate(${deg}deg)`;
-
+      const finalDeg = totalRotation % 360;
+      const arrowDeg = (360 - finalDeg) % 360;
+      const resultIndex = Math.floor(arrowDeg / anglePerSegment);
       const resultText = tasks[resultIndex];
+
       history.unshift(`${resultIndex + 1}号：${resultText}`);
       if (history.length > 10) history.pop();
 
       setTimeout(() => {
-        alert("你抽中的是：" + (resultIndex + 1) + "号 - " + resultText);
+        alert(`你抽中的是：${resultIndex + 1}号 - ${resultText}`);
       }, 5000);
     }
 
